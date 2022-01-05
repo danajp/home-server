@@ -1,0 +1,6 @@
+---
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFvlXc0luAN5p0h3OA9wz5fuUQbXzkGcsyiPqrBpUuAa2dR67coxSt9PmBM4fcaRzcThjkueWqqmjk/FExU0NKg=
