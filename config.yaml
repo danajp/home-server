@@ -4,3 +4,11 @@ passwd:
     - name: core
       ssh_authorized_keys:
         - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFvlXc0luAN5p0h3OA9wz5fuUQbXzkGcsyiPqrBpUuAa2dR67coxSt9PmBM4fcaRzcThjkueWqqmjk/FExU0NKg=
+storage:
+  files:
+    - filesystem: root
+      path: /opt/bin/k3s
+      mode: 755
+      contents:
+        remote:
+          url: https://github.com/k3s-io/k3s/releases/download/v1.23.3%2Bk3s1/k3s
