@@ -4,11 +4,46 @@ passwd:
     - name: core
       ssh_authorized_keys:
         - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFvlXc0luAN5p0h3OA9wz5fuUQbXzkGcsyiPqrBpUuAa2dR67coxSt9PmBM4fcaRzcThjkueWqqmjk/FExU0NKg=
-storage:
-  files:
-    - filesystem: root
-      path: /opt/bin/k3s
-      mode: 755
-      contents:
-        remote:
-          url: https://github.com/k3s-io/k3s/releases/download/v1.23.3%2Bk3s1/k3s
+#storage:
+#  files:
+#    - filesystem: root
+#      path: /opt/bin/k3s
+#      mode: 755
+#      contents:
+#        remote:
+#          url: https://github.com/k3s-io/k3s/releases/download/v1.23.3%2Bk3s1/k3s
+#systemd:
+#  units:
+#    - name: k3s.service
+#      enabled: true
+#      contents: |-
+#        [Unit]
+#        Description=k3s server
+#        Documentation=https://k3s.io
+#        Wants=network-online.target
+#        After=network-online.target
+#
+#        [Install]
+#        WantedBy=multi-user.target
+#
+#        [Service]
+#        Type=notify
+#        KillMode=process
+#        Delegate=yes
+#        LimitNOFILE=1048576
+#        LimitNPROC=infinity
+#        LimitCORE=infinity
+#        TasksMax=infinity
+#        TimeoutStartSec=0
+#        Restart=always
+#        RestartSec=5s
+#        ExecStartPre=-/sbin/modprobe br_netfilter
+#        ExecStartPre=-/sbin/modprobe overlay
+#        ExecStart=/opt/bin/k3s server
+
+#update:
+#  group: beta
+#locksmith:
+#  reboot_strategy: reboot
+#  window_start: Sun 04:00
+#  window_length: 2h

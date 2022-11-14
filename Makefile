@@ -1,20 +1,20 @@
-ignition.json: config.yaml
+FLATCAR_BASE_IMAGE=flatcar_production_qemu_image.img
+
+$(FLATCAR_BASE_IMAGE): SHELL:=/bin/bash
+$(FLATCAR_BASE_IMAGE):
+	wget https://beta.release.flatcar-linux.net/amd64-usr/current/flatcar_production_qemu_image.img.bz2{,.sig}
+# TODO verify signature of image
+#	gpg --verify flatcar_production_qemu_image.img.bz2.sig
+	bunzip2 flatcar_production_qemu_image.img.bz2
+#	qemu-img resize flatcar_production_qemu_image-libvirt-import.img +5G
+
+.PHONY: apply
+apply: $(FLATCAR_BASE_IMAGE) config.ign
+	terraform apply -var "base_image=$(FLATCAR_BASE_IMAGE)"
+
+.PHONY: destroy
+destroy: $(FLATCAR_BASE_IMAGE) config.ign
+	terraform destroy -var "base_image=$(FLATCAR_BASE_IMAGE)"
+
+config.ign: config.yaml
 	ct -in-file config.yaml -out-file $@ -pretty -strict -platform custom
-
-packer-flatcar-virtualbox.box: vagrant-box.pkr.hcl ignition.json
-	packer validate $<
-	packer build $<
-
-.PHONY: clean
-clean:
-	vagrant destroy -f
-	rm -f packer-flatcar-virtualbox.box
-	rm -rf output-flatcar
-
-.PHONY: up
-up: packer-flatcar-virtualbox.box
-	vagrant up
-
-.PHONY: ssh
-ssh: up
-	vagrant ssh

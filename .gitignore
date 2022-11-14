@@ -1,3 +1,4 @@
-.vagrant
-*.box
-ignition.json
+.terraform/
+terraform.tfstate*
+config.ign
+flatcar_production_qemu_image.img*
