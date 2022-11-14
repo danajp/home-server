@@ -9,12 +9,15 @@ $(FLATCAR_BASE_IMAGE):
 #	qemu-img resize flatcar_production_qemu_image-libvirt-import.img +5G
 
 .PHONY: apply
-apply: $(FLATCAR_BASE_IMAGE) config.ign
+apply: $(FLATCAR_BASE_IMAGE) config.ign .terraform
 	terraform apply -var "base_image=$(FLATCAR_BASE_IMAGE)"
 
 .PHONY: destroy
-destroy: $(FLATCAR_BASE_IMAGE) config.ign
+destroy: $(FLATCAR_BASE_IMAGE) config.ign .terraform
 	terraform destroy -var "base_image=$(FLATCAR_BASE_IMAGE)"
 
 config.ign: config.yaml
-	ct -in-file config.yaml -out-file $@ -pretty -strict -platform custom
+	ct -in-file $< -out-file $@ -pretty -strict -platform custom
+
+.terraform:
+	terraform init
