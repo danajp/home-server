@@ -16,8 +16,11 @@ apply: $(FLATCAR_BASE_IMAGE) config.ign .terraform
 destroy: $(FLATCAR_BASE_IMAGE) config.ign .terraform
 	terraform destroy -var "base_image=$(FLATCAR_BASE_IMAGE)"
 
-config.ign: config.yaml
+config.ign: ../config.yaml
 	ct -in-file $< -out-file $@ -pretty -strict -platform custom
 
 .terraform:
 	terraform init
+
+kubeconfig.yaml:
+	$(shell terraform output -json | jq -r .kubeconfig_command.value) > $@

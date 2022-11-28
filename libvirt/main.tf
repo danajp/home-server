@@ -1,5 +1,4 @@
 terraform {
-  required_version = ">= 1.2"
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
@@ -9,6 +8,11 @@ terraform {
 
 provider "libvirt" {
   uri = "qemu:///system"
+}
+
+locals { 
+  ssh_command = "ssh core@${local.vm_ip}"
+  vm_ip = libvirt_domain.machine.network_interface[0].addresses[0]
 }
 
 variable "prefix" {
@@ -65,4 +69,12 @@ resource "libvirt_domain" "machine" {
     network_name   = "default"
     wait_for_lease = true
   }
+}
+
+output "ssh_command" {
+  value = local.ssh_command
+}
+
+output "kubeconfig_command"  {
+  value = "${local.ssh_command} cat /etc/rancher/k3s/k3s.yaml | sed -e 's/default/home-server-libvirt/' -e 's/127.0.0.1/${local.vm_ip}/'"
 }
