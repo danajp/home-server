@@ -1,2 +1,3 @@
 terraform 1.2.8
 jq 1.6
+helm 3.10.2
