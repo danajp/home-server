@@ -73,10 +73,3 @@ systemd:
 
         [Install]
         WantedBy=remote-fs.target
-
-#update:
-#  group: beta
-#locksmith:
-#  reboot_strategy: reboot
-#  window_start: Sun 04:00
-#  window_length: 2h
