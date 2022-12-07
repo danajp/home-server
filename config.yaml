@@ -59,6 +59,20 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+    - name: mnt-data.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Mount data nfs share
+        Before=remote-fs.target
+
+        [Mount]
+        Type=nfs
+        What=192.168.1.100:/mnt/data
+        Where=/mnt/data
+
+        [Install]
+        WantedBy=remote-fs.target
 
 #update:
 #  group: beta
