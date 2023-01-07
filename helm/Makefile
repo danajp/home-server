@@ -72,7 +72,13 @@ argocd:
 	--set applicationSet.replicas=1 \
 	--set "configs.params.server\.insecure=true" \
 	--set dex.enabled=false \
-	--set "configs.cm.accounts\.danajp=apiKey\, login" \
-	--set "configs.cm.policy\.default=role:readonly" \
-	--set "configs.cm.policy\.csv=g\, danajp\, role:admin"
+	--set "configs.cm.accounts\.danajp=apiKey\,login" \
+	--set "configs.rbac.policy\.default=role:readonly" \
+	--set "configs.rbac.policy\.csv=g\,danajp\,role:admin" \
+	--set configs.repositories.home-server.type=git \
+	--set configs.repositories.home-server.project=default \
+	--set configs.repositories.home-server.name=home-server \
+	--set configs.repositories.home-server.url=https://github.com/danajp/home-server \
+	--set configs.repositories.home-server.username=danajp \
+	--set configs.repositories.home-server.password=$(shell op item get github.com --fields label=argo-cd-pat)
 # TODO: automate argo-cd password setup
