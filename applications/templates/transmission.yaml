@@ -1,0 +1,32 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: transmission
+  namespace: {{ .Release.Namespace }}
+spec:
+  destination:
+    namespace:  {{ .Release.Namespace }}
+    server: {{ .Values.server }}
+
+  project: {{ .Values.project }}
+
+  source:
+    chart: transmission
+    repoURL: https://nicholaswilde.github.io/helm-charts/
+    targetRevision: 0.2.19
+    helm:
+      parameters:
+        - name: env.TZ
+          value: America/New_York
+        - name: ingress.hosts[0].host
+          value: transmission.home.danajp.org
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
