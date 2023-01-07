@@ -81,4 +81,12 @@ argocd:
 	--set configs.repositories.home-server.url=https://github.com/danajp/home-server \
 	--set configs.repositories.home-server.username=danajp \
 	--set configs.repositories.home-server.password=$(shell op item get github.com --fields label=argo-cd-pat)
+
+	helm upgrade root-application charts/root-application \
+	--kube-context $(KUBECTL_CONTEXT) \
+	--install \
+	--namespace argocd \
+	--set repo.owner=danajp \
+	--set repo.name=home-server \
+	--set repo.targetRevision=initial-development
 # TODO: automate argo-cd password setup
