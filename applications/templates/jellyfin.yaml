@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: jellyfin
+  namespace: {{ .Release.Namespace }}
+spec:
+  destination:
+    namespace: jellyfin
+    server: {{ .Values.server }}
+
+  project: {{ .Values.project }}
+
+  source:
+    chart: jellyfin
+    repoURL: https://utkuozdemir.org/helm-charts
+    targetRevision: 2.0.0
+    helm:
+      parameters:
+        - name: persistence.config.enabled
+          value: "true"
+        - name: persistence.config.isPvc
+          value: "false"
+        - name: persistence.config.customVolume.nfs.server
+          value: 192.168.1.100
+        - name: persistence.config.customVolume.nfs.path
+          value: /mnt/data/jellyfin
+        - name: persistence.data.enabled
+          value: "true"
+        - name: persistence.data.isPvc
+          value: "false"
+        - name: persistence.data.customVolume.nfs.server
+          value: 192.168.1.100
+        - name: persistence.data.customVolume.nfs.path
+          value: /mnt/data/media
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
