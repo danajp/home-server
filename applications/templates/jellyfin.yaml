@@ -19,6 +19,8 @@ spec:
     targetRevision: 2.0.0
     helm:
       parameters:
+        - name: securityContext.runAsUser: 1000
+        - name: securityContext.runAsGroup: 1000
         - name: persistence.config.enabled
           value: "true"
         - name: persistence.config.isPvc
