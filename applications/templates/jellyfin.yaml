@@ -15,27 +15,29 @@ spec:
 
   source:
     chart: jellyfin
-    repoURL: https://utkuozdemir.org/helm-charts
-    targetRevision: 2.0.0
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: 9.5.3
     helm:
       parameters:
-        - name: securityContext.runAsUser: 1000
-        - name: securityContext.runAsGroup: 1000
+        - name: podSecurityContext.runAsUser
+          value: "1000"
+        - name: podSecurityContext.runAsGroup
+          value: "1000"
         - name: persistence.config.enabled
           value: "true"
-        - name: persistence.config.isPvc
-          value: "false"
-        - name: persistence.config.customVolume.nfs.server
+        - name: persistence.config.type
+          value: "nfs"
+        - name: persistence.config.server
           value: 192.168.1.100
-        - name: persistence.config.customVolume.nfs.path
+        - name: persistence.config.path
           value: /mnt/data/jellyfin
-        - name: persistence.data.enabled
+        - name: persistence.media.enabled
           value: "true"
-        - name: persistence.data.isPvc
-          value: "false"
-        - name: persistence.data.customVolume.nfs.server
+        - name: persistence.media.type
+          value: "nfs"
+        - name: persistence.media.server
           value: 192.168.1.100
-        - name: persistence.data.customVolume.nfs.path
+        - name: persistence.media.path
           value: /mnt/data/media
 
   syncPolicy:
