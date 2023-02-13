@@ -14,6 +14,7 @@ provision:
 
 kubeconfig.yaml: .k3s-ip
 	ssh root@$(HYPERVISOR_IP) pct exec 104 -- cat /etc/rancher/k3s/k3s.yaml | sed "s|127.0.0.1|$(shell cat .k3s-ip)|g" > $@
+	chmod 600 $@
 
 .PHONY: install-ansible-collections
 install-ansible-collections:
