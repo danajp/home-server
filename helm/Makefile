@@ -1,9 +1,9 @@
-KUBECTL_CONTEXT=k3s
+KUBECONFIG=../hypervisor/kubeconfig.yaml
+HELM=helm --kubeconfig=$(KUBECONFIG)
 
 .PHONY: plex
 plex:
-	helm upgrade plex kube-plex \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade plex kube-plex \
 	--install \
 	--namespace plex \
 	--create-namespace \
@@ -23,17 +23,16 @@ plex:
 
 .PHONY: plex-data
 plex-data:
-	helm upgrade plex-data charts/plex-data \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade plex-data charts/plex-data \
 	--install \
 	--create-namespace \
 	--namespace plex \
 	--set hostPath=/mnt/data
 
+# TODO: figure out how to write namecheap-credentials secret
 .PHONY: cert-manager
 cert-manager:
-	helm upgrade cert-manager cert-manager \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade cert-manager cert-manager \
 	--install \
 	--create-namespace \
 	--namespace cert-manager \
@@ -41,24 +40,22 @@ cert-manager:
 	--version v1.10.1 \
 	--set installCRDs=true
 
-	helm upgrade cert-manager-webhook-namecheap cert-manager-webhook-namecheap \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade cert-manager-webhook-namecheap cert-manager-webhook-namecheap \
 	--install \
 	--namespace cert-manager \
 	--repo https://danajp.github.io/cert-manager-webhook-namecheap
 
-	helm upgrade letsencrypt-namecheap-issuer letsencrypt-namecheap-issuer \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade letsencrypt-namecheap-issuer letsencrypt-namecheap-issuer \
 	--install \
 	--namespace cert-manager \
 	--repo https://danajp.github.io/cert-manager-webhook-namecheap \
 	--set email=danajp@gmail.com \
 	--set secret=namecheap-credentials
 
+# TODO: figure out how to set argocd user password
 .PHONY: argocd
 argocd:
-	helm upgrade argocd argo-cd \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade argocd argo-cd \
 	--install \
 	--create-namespace \
 	--namespace argocd \
@@ -83,11 +80,14 @@ argocd:
 	--set configs.repositories.home-server.username=danajp \
 	--set configs.repositories.home-server.password=$(shell op item get github.com --fields label=argo-cd-pat)
 
-	helm upgrade root-application charts/root-application \
-	--kube-context $(KUBECTL_CONTEXT) \
+	$(HELM) upgrade root-application charts/root-application \
 	--install \
 	--namespace argocd \
 	--set repo.owner=danajp \
 	--set repo.name=home-server \
 	--set repo.targetRevision=initial-development
 # TODO: automate argo-cd password setup
+
+.PHONY: onepassword-connect
+onepassword-connect:
+	$(HELM) upgrade onepassword connect
