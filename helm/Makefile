@@ -1,18 +1,20 @@
-NFS_HOST=192.168.1.100
 KUBECTL_CONTEXT=k3s
-NAMESPACE=plex
 
 .PHONY: plex
 plex:
 	helm upgrade plex kube-plex \
 	--kube-context $(KUBECTL_CONTEXT) \
 	--install \
-	--namespace $(NAMESPACE) \
+	--namespace plex \
+	--create-namespace \
 	--repo https://ressu.github.io/kube-plex \
 	--set timezone=America/New_York \
 	--set kubePlex.enabled=false \
 	--set ingress.enabled=true \
-	--set ingress.hosts[0]=plex.localdomain \
+	--set ingress.hosts[0]=plex.home.danajp.org \
+	--set ingress.tls[0].hosts[0]=plex.home.danajp.org \
+	--set ingress.tls[0].secretName=plex-tls \
+	--set ingress.annotations.cert-manager\\.io/cluster-issuer=letsencrypt-prod \
 	--set service.type=NodePort \
 	--set service.nodePort=32400 \
 	--set persistence.data.claimName=plex-data-data \
@@ -25,9 +27,8 @@ plex-data:
 	--kube-context $(KUBECTL_CONTEXT) \
 	--install \
 	--create-namespace \
-	--namespace $(NAMESPACE) \
-	--set nfs.server=$(NFS_HOST) \
-	--set nfs.path=/mnt/data
+	--namespace plex \
+	--set hostPath=/mnt/data
 
 .PHONY: cert-manager
 cert-manager:
