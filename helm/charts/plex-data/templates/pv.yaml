@@ -13,5 +13,5 @@ spec:
     name: {{ $.Release.Name }}-{{ .name }}
     namespace: {{ $.Release.Namespace }}
   hostPath:
-    path: {{ $.Values.nfs.path }}/{{ .subPath }}
+    path: {{ $.Values.hostPath }}/{{ .subPath }}
 {{ end }}
