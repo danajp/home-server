@@ -1,3 +1,6 @@
 terraform 1.2.8
 jq 1.6
 helm 3.10.2
+ansible-base 2.10.17
+cmctl 1.10.1
+argocd 2.5.5
