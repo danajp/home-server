@@ -48,20 +48,6 @@
       tags: [never]
       ansible.builtin.command: update-grub
 
-    - name: Create VM config dir
-      ansible.builtin.file:
-        path: /etc/vmconfigs/k3s
-        owner: root
-        group: www-data
-        state: directory
-
-    - name: Copy ignition config for k3s vm
-      ansible.builtin.copy:
-        src: ../config.ign
-        dest: /etc/vmconfigs/k3s/config.ign
-        owner: root
-        group: www-data
-
     - name: Modify sysctl for lxc net.ipv4.ip_forward
       ansible.posix.sysctl:
         name: net.ipv4.ip_forward
