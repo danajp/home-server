@@ -1,34 +1,6 @@
 KUBECONFIG=../hypervisor/kubeconfig.yaml
 HELM=helm --kubeconfig=$(KUBECONFIG)
 
-.PHONY: plex
-plex:
-	$(HELM) upgrade plex kube-plex \
-	--install \
-	--namespace plex \
-	--create-namespace \
-	--repo https://ressu.github.io/kube-plex \
-	--set timezone=America/New_York \
-	--set kubePlex.enabled=false \
-	--set ingress.enabled=true \
-	--set ingress.hosts[0]=plex.home.danajp.org \
-	--set ingress.tls[0].hosts[0]=plex.home.danajp.org \
-	--set ingress.tls[0].secretName=plex-tls \
-	--set ingress.annotations.cert-manager\\.io/cluster-issuer=letsencrypt-prod \
-	--set service.type=NodePort \
-	--set service.nodePort=32400 \
-	--set persistence.data.claimName=plex-data-data \
-	--set persistence.config.claimName=plex-data-config \
-	--set claimToken=$(CLAIM_TOKEN)
-
-.PHONY: plex-data
-plex-data:
-	$(HELM) upgrade plex-data charts/plex-data \
-	--install \
-	--create-namespace \
-	--namespace plex \
-	--set hostPath=/mnt/data
-
 # TODO: figure out how to write namecheap-credentials secret
 .PHONY: cert-manager
 cert-manager:
@@ -52,7 +24,7 @@ cert-manager:
 	--set email=danajp@gmail.com \
 	--set secret=namecheap-credentials
 
-#
+# TODO: automate argo-cd password setup
 # To finish setup:
 # 1. Get the admin pw:
 #    kubectl get secret -n argocd  argocd-initial-admin-secret -o json | jq '.data.password | @base64d' -r
@@ -93,8 +65,3 @@ argocd:
 	--set repo.owner=danajp \
 	--set repo.name=home-server \
 	--set repo.targetRevision=initial-development
-# TODO: automate argo-cd password setup
-
-.PHONY: onepassword-connect
-onepassword-connect:
-	$(HELM) upgrade onepassword connect
