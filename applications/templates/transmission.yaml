@@ -8,7 +8,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   destination:
-    namespace:  {{ .Release.Namespace }}
+    namespace: transmission
     server: {{ .Values.server }}
 
   project: {{ .Values.project }}
@@ -23,6 +23,10 @@ spec:
           value: America/New_York
         - name: ingress.hosts[0].host
           value: transmission.home.danajp.org
+        - name: ingress.hosts[0].paths[0].path
+          value: /
+        - name: ingress.hosts[0].paths[0].pathType
+          value: Prefix
 
   syncPolicy:
     automated:
