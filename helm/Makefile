@@ -52,7 +52,14 @@ cert-manager:
 	--set email=danajp@gmail.com \
 	--set secret=namecheap-credentials
 
-# TODO: figure out how to set argocd user password
+#
+# To finish setup:
+# 1. Get the admin pw:
+#    kubectl get secret -n argocd  argocd-initial-admin-secret -o json | jq '.data.password | @base64d' -r
+# 2. Login as admin with the cli
+#    argocd login --username admin
+# 3. Change pw for danajp
+#    argocd account update-password --account danajp --new-password setecastronomy
 .PHONY: argocd
 argocd:
 	$(HELM) upgrade argocd argo-cd \
