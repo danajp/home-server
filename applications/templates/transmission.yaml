@@ -27,6 +27,12 @@ spec:
           value: /
         - name: ingress.hosts[0].paths[0].pathType
           value: Prefix
+        - name: ingress.tls[0].hosts[0]
+          value: transmission.home.danajp.org
+        - name: ingress.tls[0].secretName
+          value: transmission-tls
+        - name: ingress.annotations.cert-manager\.io/cluster-issuer
+          value: letsencrypt-prod
 
   syncPolicy:
     automated:
