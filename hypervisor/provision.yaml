@@ -1,0 +1,141 @@
+---
+
+- name: Provision hypervisor
+  hosts: "{{ hypervisor_ip }}"
+  gather_facts: false
+  vars:
+    k3s:
+      vmid: 104
+      volume: vm-104-disk-0
+      storage: local-lvm
+      volume_id: local-lvm:vm-104-disk-0
+      volume_size: 8G
+      os_template: local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst
+
+  tasks:
+    # see https://pve.proxmox.com/wiki/Package_Repositories#sysadmin_enterprise_repo
+    - name: Disable Proxmox enterprise repos
+      ansible.builtin.apt_repository:
+        repo: deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise
+        state: absent
+
+    - name: Enable Proxmox no-subscription repos
+      ansible.builtin.apt_repository:
+        repo: deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+        state: present
+
+    - name: Create data group
+      ansible.builtin.group:
+        name: data
+        gid: 1000
+
+    - name: Create data user
+      ansible.builtin.user:
+        name: data
+        comment: Owner of /mnt/data files
+        uid: 1000
+        groups: data
+
+    - name: Set grub params
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX=).*'
+        replace: '\1"nomodeset"'
+        owner: root
+        group: root
+
+    - name: Update grub
+      tags: [never]
+      ansible.builtin.command: update-grub
+
+    - name: Modify sysctl for lxc net.ipv4.ip_forward
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: "1"
+        state: present
+        sysctl_set: true
+
+    - name: Modify sysctl for lxc vm.swappiness
+      ansible.posix.sysctl:
+        name: vm.swappiness
+        value: "0"
+        state: present
+        sysctl_set: true
+
+    - name: Disable swap
+      ansible.builtin.command: swapoff -a
+
+    - name: Check for lxc volume
+      ansible.builtin.command:
+        cmd: pvesm list local-lvm -vmid {{ k3s.vmid }}
+      register: pvesm_list
+
+    - name: debug var
+      ansible.builtin.debug:
+        var: pvesm_list
+
+    - name: Create k3s lxc volume
+      ansible.builtin.shell:
+        cmd: |
+          pvesm alloc {{ k3s.storage }} {{ k3s.vmid }} {{ k3s.volume }} {{ k3s.volume_size }} -format raw
+          mkfs.ext4 $(pvesm path {{ k3s.volume_id }})
+      when: pvesm_list.stdout_lines|length < 2
+
+    - name: Create k3s lxc
+      ansible.builtin.command:
+        cmd: |
+          pct create {{ k3s.vmid }} {{ k3s.os_template }}
+          --rootfs volume={{ k3s.volume_id }},size={{ k3s.volume_size }}
+          --swap 0
+          --ostype ubuntu
+          --net0 name=eth0,bridge=vmbr0,ip=dhcp
+          --features nesting=1
+          --memory 16384
+          --onboot 1
+          --mp0 /mnt/data,mp=/mnt/data
+          --hostname k3s
+        creates: /etc/pve/lxc/{{ k3s.vmid }}.conf
+
+    - name: Modify k3s lxc config
+      ansible.builtin.blockinfile:
+        block: |
+          lxc.apparmor.profile: unconfined
+          lxc.cgroup.devices.allow: a
+          lxc.cap.drop:
+          lxc.mount.auto: "proc:rw sys:rw"
+        marker: "# --- managed by ansible ---"
+        path: /etc/pve/lxc/{{ k3s.vmid }}.conf
+
+    - name: start k3s lxc
+      ansible.builtin.shell:
+        cmd: |
+          pct start {{ k3s.vmid }} || true
+
+    - name: copy systemd unit
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Make all mounts shared
+          [Service]
+          Type=oneshot
+          RemainAfterExit=yes
+          ExecStart=mount --make-rshared /
+          [Install]
+          WantedBy=k3s.service
+        dest: /tmp/shared-mounts.service
+
+    - name: setup
+      ansible.builtin.shell:
+        cmd: |
+          pct push {{ k3s.vmid }} /tmp/shared-mounts.service /etc/systemd/system/shared-mounts.service
+          pct exec {{ k3s.vmid }} -- ln -s /dev/console /dev/kmsg
+          pct exec {{ k3s.vmid }} -- systemctl enable shared-mounts.service
+          pct exec {{ k3s.vmid }} -- systemctl start shared-mounts.service
+
+    - name: install curl
+      ansible.builtin.command:
+        cmd: pct exec {{ k3s.vmid }} -- bash -c 'apt update && apt install curl -y'
+
+    - name: install k3s
+      ansible.builtin.shell:
+        cmd: pct exec {{ k3s.vmid }} -- bash -c 'curl -sfL https://get.k3s.io | sh -'

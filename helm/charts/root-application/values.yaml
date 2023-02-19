@@ -1,0 +1,3 @@
+project: default
+repo:
+  targetRevision: master

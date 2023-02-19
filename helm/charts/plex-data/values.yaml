@@ -1,0 +1,11 @@
+storage:
+  size: 800Gi
+  accessModes:
+    - ReadWriteMany
+  class: local-path
+
+volumes:
+  - name: data
+    subPath: media
+  - name: config
+    subPath: plex
