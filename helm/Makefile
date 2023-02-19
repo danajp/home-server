@@ -71,7 +71,7 @@ cert-manager: op-logged-in
 # 3. Change pw for danajp
 #    argocd account update-password --account danajp --new-password setecastronomy
 .PHONY: argocd
-argocd:
+argocd: op-logged-in
 	$(HELM) upgrade argocd argo-cd \
 	--install \
 	--create-namespace \
