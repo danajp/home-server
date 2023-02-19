@@ -1,5 +1,6 @@
 KUBECONFIG=../hypervisor/kubeconfig.yaml
 HELM=helm --kubeconfig=$(KUBECONFIG)
+KUBECTL=kubectl --kubeconfig=$(KUBECONFIG)
 
 # assert that we're logged in with the 1pass cli
 .PHONY: op-logged-in
@@ -15,6 +16,27 @@ op-logged-in:
 	--repo https://1password.github.io/connect-helm-charts \
 	--version 1.10.0 \
 	--set connect.credentials_base64=$(shell op document get --vault home-server 'home-server Credentials File' | base64 -w0)
+
+.PHONY: external-secrets
+external-secrets: op-logged-in
+	$(HELM) upgrade external-secrets external-secrets \
+	--install \
+	--create-namespace \
+	--namespace external-secrets \
+	--repo https://charts.external-secrets.io \
+	--version 0.7.2 \
+	--set installCRDs=true
+
+	# use create --dry-run/apply to avoid error when the secret already exists
+	$(KUBECTL) create secret generic \
+	1password-connect-token \
+	--namespace external-secrets \
+	--from-literal token=$(shell op item get --vault home-server 'home-server Access Token: external-secrets' --field credential) \
+	--dry-run=client \
+	-o yaml \
+	| kubectl apply -f -
+
+	$(KUBECTL) apply -f 1password-secret-store.yaml
 
 # TODO: figure out how to write namecheap-credentials secret
 .PHONY: cert-manager
