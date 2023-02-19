@@ -16,7 +16,7 @@ spec:
   source:
     path: helm/charts/plex-data
     repoURL: https://github.com/danajp/home-server.git
-    targetRevision: initial-development
+    targetRevision: master
 
     helm:
       parameters:

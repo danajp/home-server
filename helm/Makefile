@@ -102,4 +102,4 @@ argocd: op-logged-in
 	--namespace argocd \
 	--set repo.owner=danajp \
 	--set repo.name=home-server \
-	--set repo.targetRevision=initial-development
+	--set repo.targetRevision=master
