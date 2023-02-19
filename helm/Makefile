@@ -38,9 +38,10 @@ external-secrets: op-logged-in
 
 	$(KUBECTL) apply -f 1password-secret-store.yaml
 
-# TODO: figure out how to write namecheap-credentials secret
 .PHONY: cert-manager
-cert-manager:
+cert-manager: op-logged-in
+	$(KUBECTL) apply -f cert-manager-namecheap-external-secret.yaml
+
 	$(HELM) upgrade cert-manager cert-manager \
 	--install \
 	--create-namespace \
