@@ -1,0 +1,66 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: prometheus-operator
+  namespace: {{ .Release.Namespace }}
+spec:
+  destination:
+    namespace: monitoring
+    server: {{ .Values.server }}
+
+  project: {{ .Values.project }}
+
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 45.5.0
+
+    helm:
+      parameters:
+        - name: alertmanager.ingress.enabled
+          value: "true"
+        - name: alertmanager.ingress.annotations.cert-manager\.io/cluster-issuer
+          value: letsencrypt-prod
+        - name: alertmanager.ingress.hosts[0]
+          value: alertmanager.home.danajp.org
+        - name: alertmanager.ingress.tls[0].hosts[0]
+          value: alertmanager.home.danajp.org
+        - name: alertmanager.ingress.tls[0].secretName
+          value: alertmanager-tls
+
+        - name: grafana.ingress.enabled
+          value: "true"
+        - name: grafana.ingress.annotations.cert-manager\.io/cluster-issuer
+          value: letsencrypt-prod
+        - name: grafana.ingress.hosts[0]
+          value: grafana.home.danajp.org
+        - name: grafana.ingress.tls[0].hosts[0]
+          value: grafana.home.danajp.org
+        - name: grafana.ingress.tls[0].secretName
+          value: grafana-tls
+
+        - name: prometheus.ingress.enabled
+          value: "true"
+        - name: prometheus.ingress.annotations.cert-manager\.io/cluster-issuer
+          value: letsencrypt-prod
+        - name: prometheus.ingress.hosts[0]
+          value: prometheus.home.danajp.org
+        - name: prometheus.ingress.tls[0].hosts[0]
+          value: prometheus.home.danajp.org
+        - name: prometheus.ingress.tls[0].secretName
+          value: prometheus-tls
+
+        - name: kubeEtcd.enabled
+          value: "false"
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    # use server side apply to avoid hitting limit on annotation value
+    - ServerSideApply=true
