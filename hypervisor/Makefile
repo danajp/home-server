@@ -1,13 +1,17 @@
 HYPERVISOR_IP=192.168.1.100
 
+ifneq ($(strip $(TAGS)),)
+override TAGS := --tags $(TAGS)
+endif
+
 .PHONY: provision
 provision:
 	ansible-playbook provision.yaml \
 	-i $(HYPERVISOR_IP), \
 	--user root \
 	-e hypervisor_ip=$(HYPERVISOR_IP) \
-	-vv \
-	-C
+	$(TAGS) \
+	-vv
 
 .k3s-ip:
 	ssh root@192.168.1.100 pct exec 104 -- hostname -I | xargs -n1 | grep '192\.168\.' > $@

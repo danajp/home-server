@@ -9,7 +9,7 @@
       volume: vm-104-disk-0
       storage: local-lvm
       volume_id: local-lvm:vm-104-disk-0
-      volume_size: 8G
+      volume_size: 16G
       os_template: local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst
 
   tasks:
@@ -111,7 +111,8 @@
         cmd: |
           pct start {{ k3s.vmid }} || true
 
-    - name: copy systemd unit
+    - name: copy shared mounts systemd unit
+      tags: [systemd]
       ansible.builtin.copy:
         content: |
           [Unit]
@@ -124,13 +125,30 @@
           WantedBy=k3s.service
         dest: /tmp/shared-mounts.service
 
-    - name: setup
+    - name: copy console symlink systemd unit
+      tags: [systemd]
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Symlink /dev/kmsg -> /dev/console
+          [Service]
+          Type=oneshot
+          RemainAfterExit=yes
+          ExecStart=[ -e /dev/kmsg ] || ln -s /dev/console /dev/kmsg
+          [Install]
+          WantedBy=k3s.service
+        dest: /tmp/console-symlink.service
+
+    - name: setup systemd units
+      tags: [systemd]
       ansible.builtin.shell:
         cmd: |
           pct push {{ k3s.vmid }} /tmp/shared-mounts.service /etc/systemd/system/shared-mounts.service
-          pct exec {{ k3s.vmid }} -- ln -s /dev/console /dev/kmsg
+          pct push {{ k3s.vmid }} /tmp/console-symlink.service /etc/systemd/system/console-symlink.service
           pct exec {{ k3s.vmid }} -- systemctl enable shared-mounts.service
           pct exec {{ k3s.vmid }} -- systemctl start shared-mounts.service
+          pct exec {{ k3s.vmid }} -- systemctl enable console-symlink.service
+          pct exec {{ k3s.vmid }} -- systemctl start console-symlink.service
 
     - name: install curl
       ansible.builtin.command:
