@@ -134,7 +134,7 @@
           [Service]
           Type=oneshot
           RemainAfterExit=yes
-          ExecStart=[ -e /dev/kmsg ] || ln -s /dev/console /dev/kmsg
+          ExecStart=ln -sf /dev/console /dev/kmsg
           [Install]
           WantedBy=k3s.service
         dest: /tmp/console-symlink.service
