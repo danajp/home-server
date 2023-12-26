@@ -97,6 +97,8 @@ argocd: op-logged-in
 	--set configs.repositories.home-server.username=danajp \
 	--set configs.repositories.home-server.password=$(shell op item get github.com --fields label=argo-cd-pat)
 
+.PHONY: argocd-root-application
+argocd-root-application:
 	$(HELM) upgrade root-application charts/root-application \
 	--install \
 	--namespace argocd \
