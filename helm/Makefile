@@ -14,7 +14,7 @@ op-logged-in:
 	--create-namespace \
 	--namespace 1password \
 	--repo https://1password.github.io/connect-helm-charts \
-	--version 1.10.0 \
+	--version 1.14.0 \
 	--set connect.credentials_base64=$(shell op document get --vault home-server 'home-server Credentials File' | base64 -w0)
 
 .PHONY: external-secrets
