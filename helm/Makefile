@@ -24,7 +24,7 @@ external-secrets: op-logged-in
 	--create-namespace \
 	--namespace external-secrets \
 	--repo https://charts.external-secrets.io \
-	--version 0.7.2 \
+	--version 0.9.11 \
 	--set installCRDs=true
 
 	# use create --dry-run/apply to avoid error when the secret already exists
