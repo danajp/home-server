@@ -47,7 +47,7 @@ cert-manager: op-logged-in
 	--create-namespace \
 	--namespace cert-manager \
 	--repo https://charts.jetstack.io \
-	--version v1.10.1 \
+	--version v1.13.3 \
 	--set installCRDs=true
 
 	$(HELM) upgrade cert-manager-webhook-namecheap cert-manager-webhook-namecheap \
