@@ -23,7 +23,7 @@ external-secrets: op-logged-in
 	kustomize build --enable-helm kustomizations/external-secrets | $(KUBECTL) apply -f -
 	# use create --dry-run/apply to avoid error when the secret already exists
 	$(KUBECTL) create secret generic -n external-secrets 1password-connect-token \
-		--from-file token=<(op item get --vault home-server 'home-server Access Token: external-secrets' --field credential) \
+		--from-file token=<(op item get --vault home-server 'home-server Access Token: external-secrets' --field credential | tr -d '\n') \
 		--dry-run=client \
 		-o yaml \
 	| $(KUBECTL) apply -f -
