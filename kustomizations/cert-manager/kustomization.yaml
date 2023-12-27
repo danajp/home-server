@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cert-manager
+
+resources:
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
+  - external-secret-namecheap-credentials.yaml
+
+helmCharts:
+  - releaseName: letsencrypt-namecheap-issuer
+    name: letsencrypt-namecheap-issuer
+    namespace: cert-manager
+    repo: https://danajp.github.io/cert-manager-webhook-namecheap
+    valuesInline:
+      email: danajp@gmail.com
+      secret: namecheap-credentials
+  - releaseName: cert-manager-webhook-namecheap
+    name: cert-manager-webhook-namecheap
+    namespace: cert-manager
+    repo: https://danajp.github.io/cert-manager-webhook-namecheap

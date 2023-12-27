@@ -28,6 +28,10 @@ external-secrets: op-logged-in
 		-o yaml \
 	| $(KUBECTL) apply -f -
 
+.PHONY: cert-manager
+cert-manager:
+	kustomize build --enable-helm kustomizations/cert-manager | $(KUBECTL) apply -f -
+
 .PHONY: argo-cd
 argo-cd:
 	$(KUBECTL) create ns argocd || true

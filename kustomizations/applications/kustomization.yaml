@@ -10,3 +10,4 @@ resources:
   - prometheus-operator.yaml
   - 1password-connect.yaml
   - external-secrets.yaml
+  - cert-manager.yaml
