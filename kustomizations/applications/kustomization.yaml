@@ -8,3 +8,5 @@ resources:
   - plex-data.yaml
   - plex.yaml
   - prometheus-operator.yaml
+  - 1password-connect.yaml
+  - external-secrets.yaml
