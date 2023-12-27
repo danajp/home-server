@@ -27,3 +27,12 @@ external-secrets: op-logged-in
 		--dry-run=client \
 		-o yaml \
 	| $(KUBECTL) apply -f -
+
+.PHONY: argo-cd
+argo-cd:
+	$(KUBECTL) create ns argocd || true
+	kustomize build kustomizations/argo-cd | $(KUBECTL) apply -f -
+
+.PHONY: applications
+applications:
+	kustomize build kustomizations/applications | $(KUBECTL) apply -f -

@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+  - github.com/argoproj/argo-cd/manifests/cluster-install?ref=v2.9.3
+  - external-secret-repo-home-server.yaml
+  - ingress.yaml
+  - application-self.yaml
+
+configMapGenerator:
+  - name: argocd-cm
+    behavior: merge
+    literals:
+      - accounts.danajp=apiKey,login
+      - url=https://argo-cd.home.danajp.org
+    options:
+      disableNameSuffixHash: true
+  - name: argocd-rbac-cm
+    behavior: merge
+    literals:
+      - policy.csv=g,danajp,role:admin
+      - policy.default=role:readonly
+    options:
+      disableNameSuffixHash: true
+  - name: argocd-cmd-params-cm
+    behavior: merge
+    literals:
+      - server.insecure=true
+    options:
+      disableNameSuffixHash: true
+
+replicas:
+  - name: argocd-dex-server
+    count: 0
