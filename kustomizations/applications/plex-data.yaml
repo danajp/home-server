@@ -15,7 +15,7 @@ spec:
   source:
     path: kustomizations/plex-data
     repoURL: https://github.com/danajp/home-server.git
-    targetRevision: kustomize
+    targetRevision: main
 
   syncPolicy:
     automated:

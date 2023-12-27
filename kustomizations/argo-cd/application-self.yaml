@@ -15,7 +15,7 @@ spec:
   source:
     path: kustomizations/argo-cd
     repoURL: https://github.com/danajp/home-server.git
-    targetRevision: kustomize
+    targetRevision: main
     kustomize:
       namespace: argocd
 
