@@ -15,6 +15,7 @@ configMapGenerator:
     literals:
       - accounts.danajp=apiKey,login
       - url=https://argo-cd.home.danajp.org
+      - kustomize.buildOptions=--enable-helm
     options:
       disableNameSuffixHash: true
   - name: argocd-rbac-cm
