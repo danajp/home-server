@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: argocd
 
 resources:
+  - self.yaml
   - plex-data.yaml
   - plex.yaml
   - prometheus-operator.yaml

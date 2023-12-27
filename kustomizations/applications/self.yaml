@@ -24,4 +24,3 @@ spec:
       - FailOnSharedResource=true
       - PruneLast=true
       - PrunePropagationPolicy=background
-      - CreateNamespace=true
