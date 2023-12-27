@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: applications
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+
+  source:
+    path: kustomizations/applications
+    repoURL: https://github.com/danajp/home-server.git
+    targetRevision: main
+    kustomize:
+      namespace: argocd
+
+  syncPolicy:
+    syncOptions:
+      - FailOnSharedResource=true
+      - PruneLast=true
+      - PrunePropagationPolicy=background

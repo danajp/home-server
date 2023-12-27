@@ -5,13 +5,12 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   name: plex
-  namespace: {{ .Release.Namespace }}
 spec:
   destination:
     namespace: plex
-    server: {{ .Values.server }}
+    server: https://kubernetes.default.svc
 
-  project: {{ .Values.project }}
+  project: default
 
   source:
     chart: kube-plex

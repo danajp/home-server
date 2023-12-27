@@ -5,23 +5,17 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   name: plex-data
-  namespace: {{ .Release.Namespace }}
 spec:
   destination:
     namespace: plex
-    server: {{ .Values.server }}
+    server: https://kubernetes.default.svc
 
-  project: {{ .Values.project }}
+  project: default
 
   source:
-    path: helm/charts/plex-data
+    path: kustomizations/plex-data
     repoURL: https://github.com/danajp/home-server.git
-    targetRevision: master
-
-    helm:
-      parameters:
-        - name: hostPath
-          value: /mnt/data
+    targetRevision: main
 
   syncPolicy:
     automated:

@@ -1,5 +1,0 @@
-apiVersion: v2
-name: plex-data
-description: Setup data volumes for plex
-type: application
-version: 0.1.0

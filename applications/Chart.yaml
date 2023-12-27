@@ -1,5 +1,0 @@
----
-apiVersion: v1
-name: root-application
-version: 0.0.1
-description: app of apps
