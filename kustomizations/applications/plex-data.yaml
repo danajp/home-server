@@ -13,14 +13,9 @@ spec:
   project: default
 
   source:
-    path: helm/charts/plex-data
+    path: kustomizations/plex-data
     repoURL: https://github.com/danajp/home-server.git
     targetRevision: kustomize
-
-    helm:
-      parameters:
-        - name: hostPath
-          value: /mnt/data
 
   syncPolicy:
     automated:
