@@ -13,7 +13,7 @@ op-logged-in:
 	kustomize build --enable-helm kustomizations/1password-connect | $(KUBECTL) apply -f -
 	# use create --dry-run/apply to avoid error when the secret already exists
 	$(KUBECTL) create secret generic -n 1password op-credentials \
-		--from-file 1password-credentials.json=<(op document get --vault home-server 'home-server Credentials File') \
+		--from-file 1password-credentials.json=<(op document get --vault home-server 'home-server Credentials File' | base64 -w0) \
 		--dry-run=client \
 		-o yaml \
 	| $(KUBECTL) apply -f -
