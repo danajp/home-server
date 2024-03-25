@@ -139,12 +139,21 @@
           WantedBy=k3s.service
         dest: /tmp/console-symlink.service
 
+    - name: copy k3s config file
+      tags: [k3s]
+      ansible.builtin.copy:
+        content: |-
+          disable:
+            - traefik
+        dest: /tmp/k3s-config.yaml
+
     - name: setup systemd units
       tags: [systemd]
       ansible.builtin.shell:
         cmd: |
           pct push {{ k3s.vmid }} /tmp/shared-mounts.service /etc/systemd/system/shared-mounts.service
           pct push {{ k3s.vmid }} /tmp/console-symlink.service /etc/systemd/system/console-symlink.service
+          pct push {{ k3s.vmid }} /tmp/k3s-config.yaml /etc/rancher/k3s/config.yaml
           pct exec {{ k3s.vmid }} -- systemctl enable shared-mounts.service
           pct exec {{ k3s.vmid }} -- systemctl start shared-mounts.service
           pct exec {{ k3s.vmid }} -- systemctl enable console-symlink.service
