@@ -4,10 +4,19 @@ kind: Kustomization
 namespace: cert-manager
 
 resources:
-  - https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
   - external-secret-namecheap-credentials.yaml
 
 helmCharts:
+  - releaseName: cert-manager
+    name: cert-manager
+    namespace: cert-manager
+    repo: https://charts.jetstack.io
+    version: v1.14.4
+    valuesInline:
+      installCRDs: true
+      global:
+        leaderElection:
+          namespace: cert-manager
   - releaseName: letsencrypt-namecheap-issuer
     name: letsencrypt-namecheap-issuer
     namespace: cert-manager
