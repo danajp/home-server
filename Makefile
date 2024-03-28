@@ -40,3 +40,8 @@ argo-cd:
 .PHONY: applications
 applications:
 	kustomize build kustomizations/applications | $(KUBECTL) apply -f -
+
+.PHONY: ingress-nginx
+ingress-nginx:
+	$(KUBECTL) create ns ingress-nginx || true
+	kustomize build --enable-helm kustomizations/ingress-nginx | $(KUBECTL) apply -f -
