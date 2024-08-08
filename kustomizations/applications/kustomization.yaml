@@ -11,3 +11,4 @@ resources:
   - 1password-connect.yaml
   - external-secrets.yaml
   - cert-manager.yaml
+  - minecraft.yaml
