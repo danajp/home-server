@@ -40,6 +40,8 @@ spec:
               value: http://127.0.0.1:4567
             - name: OAUTH2_PROXY_OIDC_ISSUER_URL
               value: https://dev-vfztbfb7mow4uz6e.us.auth0.com
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: '*'
           ports:
             - name: oauth2-proxy
               containerPort: 4180
