@@ -22,6 +22,8 @@ spec:
           env:
             - name: GITHUB_REPO_URL
               value: https://github.com/danajp/personal-wiki.git
+            - name: GITHUB_PRIVATE_KEY
+              value: /var/run/secrets/github/private-key.pem
           envFrom:
             - secretRef:
                 name: gollum
@@ -31,6 +33,8 @@ spec:
           volumeMounts:
             - name: wiki
               mountPath: /wiki
+            - name: app-private-key
+              mountPath: /var/run/secrets/github
       containers:
         - name: oauth2-proxy
           image: {{ .Values.oauth2proxy.image }}
@@ -63,6 +67,8 @@ spec:
               value: wiki-danajp-org
             - name: GOLLUM_AUTHOR_EMAIL
               value: danajp+wiki@example.com
+            - name: GITHUB_PRIVATE_KEY
+              value: /var/run/secrets/github/private-key.pem
           envFrom:
             - secretRef:
                 name: gollum
@@ -72,6 +78,14 @@ spec:
           volumeMounts:
             - name: wiki
               mountPath: /wiki
+            - name: app-private-key
+              mountPath: /var/run/secrets/github
       volumes:
+        - name: app-private-key
+          secret:
+            secretName: gollum
+            items:
+              - key: private-key.pem
+                path: private-key.pem
         - name: wiki
           emptyDir: {}
