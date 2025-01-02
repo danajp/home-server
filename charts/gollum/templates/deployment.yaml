@@ -16,17 +16,19 @@ spec:
       labels:
         app.kubernetes.io/name: gollum
     spec:
-#      initContainers:
-#        - name: clone
-#          image: {{ .Values.gollum.image }}
-#          command:
-#            - git
-#            - clone
-#            - {{.Values.repo.url | quote }}
-#          workingDir: /wiki
-#          volumeMounts:
-#            - name: wiki
-#              mountPath: /wiki
+      initContainers:
+        - name: clone
+          env:
+            - name: GITHUB_REPO_URL
+              value: https://github.com/danajp/personal-wiki.git
+          envFrom:
+            - secretRef:
+                name: gollum
+          image: {{ .Values.gollum.image }}
+          command: [clone]
+          volumeMounts:
+            - name: wiki
+              mountPath: /wiki
       containers:
         - name: oauth2-proxy
           image: {{ .Values.oauth2proxy.image }}
