@@ -55,6 +55,11 @@ spec:
           {{- if .Values.gollum.args }}
           args: {{ .Values.gollum.args | toJson }}
           {{- end }}
+          env:
+            - name: GOLLUM_AUTHOR_USERNAME
+              value: wiki-danajp-org
+            - name: GOLLUM_AUTHOR_EMAIL
+              value: danajp+wiki@example.com
           envFrom:
             - secretRef:
                 name: gollum
