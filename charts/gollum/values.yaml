@@ -1,7 +1,7 @@
 ---
 gollum:
   image: danajp/gollum-github:6.0.1
-  args: [--h1-title, --allow-uploads, dir]
+  args: [--config, /wiki/gollum-config.rb]
 oauth2proxy:
   image: quay.io/oauth2-proxy/oauth2-proxy:v7.7.1
 repo:
