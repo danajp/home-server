@@ -22,4 +22,4 @@ spec:
                   name: oauth2-proxy
   tls:
     - hosts: [{{ .Values.ingress.hostname }}]
-      secretName: {{ .Release.Name }}
+      secretName: {{ .Release.Name }}-tls
