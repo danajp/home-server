@@ -55,6 +55,9 @@ spec:
           {{- if .Values.gollum.args }}
           args: {{ .Values.gollum.args | toJson }}
           {{- end }}
+          envFrom:
+            - secretRef:
+                name: gollum
           ports:
             - name: http
               containerPort: 4567
