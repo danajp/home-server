@@ -54,6 +54,8 @@ spec:
               value: '*'
             - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
               value: 'true'
+            - name: OAUTH2_PROXY_SCOPE
+              value: permissions
           ports:
             - name: oauth2-proxy
               containerPort: 4180
