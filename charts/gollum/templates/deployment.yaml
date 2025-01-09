@@ -54,10 +54,6 @@ spec:
               value: '*'
             - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
               value: 'true'
-            - name: OAUTH2_PROXY_SCOPE
-              value: "openid profile email permissions"
-            - name: OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER
-              value: "true"
           ports:
             - name: oauth2-proxy
               containerPort: 4180
