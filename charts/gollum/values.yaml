@@ -12,4 +12,4 @@ pull:
     timezone: America/New_York
     command:
 ingress:
-  hostname: wiki.home.danajp.org
+  hostname: wiki.danajp.org
