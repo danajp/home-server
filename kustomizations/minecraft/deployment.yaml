@@ -14,12 +14,13 @@ spec:
     spec:
       containers:
         - name: main
-          image: itzg/minecraft-server
+          image: itzg/minecraft-bedrock-server
           tty: true
           stdin: true
           ports:
             - name: minecraft
-              containerPort: 25565
+              containerPort: 19132
+              protocol: UDP
           env:
             - name: EULA
               value: "TRUE"

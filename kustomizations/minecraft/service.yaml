@@ -9,4 +9,5 @@ spec:
     app.kubernetes.io/name: minecraft
   ports:
     - name: minecraft
-      port: 25565
+      port: 19132
+      protocol: UDP
