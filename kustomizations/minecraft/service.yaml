@@ -12,3 +12,8 @@ spec:
       port: 19132
       nodePort: 32132
       protocol: UDP
+    - name: minecraft-tcp
+      targetPort: minecraft
+      port: 19132
+      nodePort: 32132
+      protocol: TCP
