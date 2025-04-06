@@ -4,16 +4,11 @@ kind: Service
 metadata:
   name: server
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app.kubernetes.io/name: minecraft
   ports:
     - name: minecraft
       port: 19132
-      nodePort: 32132
       protocol: UDP
-    - name: minecraft-tcp
       targetPort: minecraft
-      port: 19132
-      nodePort: 32132
-      protocol: TCP
