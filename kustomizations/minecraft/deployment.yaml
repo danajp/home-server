@@ -24,5 +24,3 @@ spec:
           env:
             - name: EULA
               value: "TRUE"
-            - name: SERVER_PORT
-              value: "udp://0.0.0.0:19132"
