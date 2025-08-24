@@ -13,3 +13,4 @@ resources:
   - cert-manager.yaml
   - minecraft.yaml
   - gollum.yaml
+  - pve.yaml
