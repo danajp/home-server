@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  - github.com/argoproj/argo-cd/manifests/cluster-install?ref=v3.3.11
+  - github.com/argoproj/argo-cd/manifests/cluster-install?ref=v3.4.3
   - external-secret-repo-home-server.yaml
   - ingress.yaml
   - application-self.yaml
