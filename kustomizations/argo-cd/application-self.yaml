@@ -25,3 +25,4 @@ spec:
       - PruneLast=true
       - PrunePropagationPolicy=background
       - CreateNamespace=true
+      - ServerSideApply=true
