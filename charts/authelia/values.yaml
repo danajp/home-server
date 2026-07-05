@@ -73,7 +73,7 @@ authelia:
         - domain: auth.danajp.org
           policy: bypass
         - domain: wiki.danajp.org
-          policy: two_factor
+          policy: one_factor
         - domain: "*.home.danajp.org"
           policy: one_factor
     notifier:
