@@ -54,6 +54,8 @@ spec:
               value: '*'
             - name: OAUTH2_PROXY_CODE_CHALLENGE_METHOD
               value: S256
+            - name: OAUTH2_PROXY_CLIENT_ID
+              value: gollum-wiki
             #- name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
             #  value: 'true'
           ports:
