@@ -1,6 +1,8 @@
 ---
 authelia:
   configMap:
+    filters:
+      disabled: true
     theme: dark
     server:
       port: 9091
