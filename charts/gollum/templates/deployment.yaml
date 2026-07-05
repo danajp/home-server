@@ -49,7 +49,7 @@ spec:
             - name: OAUTH2_PROXY_PROVIDER
               value: oidc
             - name: OAUTH2_PROXY_OIDC_ISSUER_URL
-              value: https://dev-vfztbfb7mow4uz6e.us.auth0.com/
+              value: https://auth.danajp.org
             - name: OAUTH2_PROXY_EMAIL_DOMAINS
               value: '*'
             #- name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON

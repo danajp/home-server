@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: authelia
+spec:
+  destination:
+    namespace: authelia
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: charts/authelia
+    repoURL: https://github.com/danajp/home-server.git
+    targetRevision: main
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,19 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: authelia-users
+  namespace: {{ .Release.Namespace }}
+spec:
+  target:
+    name: authelia-users
+    creationPolicy: Owner
+  data:
+    - secretKey: users.yml
+      remoteRef:
+        key: authelia-users
+        property: users.yml
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: 1password
