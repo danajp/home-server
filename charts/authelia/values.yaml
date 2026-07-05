@@ -1,8 +1,6 @@
 ---
 authelia:
   configMap:
-    filters:
-      disabled: true
     theme: dark
     server:
       port: 9091
@@ -51,7 +49,8 @@ authelia:
         clients:
           - client_id: gollum-wiki
             client_name: Gollum Wiki
-            client_secret: "$plaintext${AUTHELIA_OIDC_GOLLUM_CLIENT_SECRET}"
+            client_secret:
+              path: /app/secrets/oidc/clients/gollum-wiki
             public: false
             authorization_policy: one_factor
             require_pkce: true
@@ -97,6 +96,9 @@ authelia:
       - name: oidc-key
         mountPath: /app/secrets/oidc
         readOnly: true
+      - name: oidc-client-secrets
+        mountPath: /app/secrets/oidc/clients
+        readOnly: true
     extraVolumes:
       - name: data
         persistentVolumeClaim:
@@ -107,12 +109,9 @@ authelia:
       - name: oidc-key
         secret:
           secretName: authelia-oidc-key
-    env:
-      - name: AUTHELIA_OIDC_GOLLUM_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: authelia-oidc-client-secrets
-            key: gollum-wiki
+      - name: oidc-client-secrets
+        secret:
+          secretName: authelia-oidc-client-secrets
 
   ingress:
     enabled: true
